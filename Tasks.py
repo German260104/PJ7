@@ -1,13 +1,14 @@
 import numpy as np
 import yfinance as yf
 import cvxpy as cp
+import matplotlib.pyplot as plt
 
 # Define tickers and get data
-tickers = ["MSFT", "DE", "COST"]
+tickers = ["NVDA", "VNQ", "PLTR"]
 data = yf.download(tickers, period="100d", auto_adjust=True)
 prices = data["Close"]
 
-# Define return matrix for three stocks
+# Define return matrix for the three stocks
 returns_matrix = ((prices/prices.shift(1)) - 1).dropna()
 
 # Define risk tolerance
@@ -51,5 +52,30 @@ optimized_MAD = np.mean(np.abs(portfolio_deviation))
 # Compute portfolio's expected return with optimized weights
 expected_portfolio_returns = mu @ w.value
 
+# Print all the results
+print("Optimized weights: ", w.value)
 print("MAD with optimized weights: ", optimized_MAD)
 print("Expected portfolio returns: ",  expected_portfolio_returns)
+
+# Plot optimal weights and MAD vs Expected Return
+plt.figure(figsize=(6, 4))
+plt.bar(tickers, w.value)
+plt.title("Optimized Portfolio Weights")
+plt.ylabel("Weight")
+plt.ylim(0, 1)
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("optimized_weights.png", dpi=300)
+plt.show()
+
+metrics = ["MAD", "Expected Return"]
+values = [optimized_MAD, expected_portfolio_returns]
+
+plt.figure(figsize=(6, 4))
+plt.bar(metrics, values)
+plt.title("Portfolio Metrics")
+plt.ylabel("Value")
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("portfolio_metrics.png", dpi=300)
+plt.show()
