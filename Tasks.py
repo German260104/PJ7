@@ -2,6 +2,7 @@ import numpy as np
 import yfinance as yf
 import cvxpy as cp
 import matplotlib.pyplot as plt
+import os
 
 # Define tickers and get data
 tickers = ["NVDA", "VNQ", "PLTR"]
@@ -56,6 +57,7 @@ expected_portfolio_returns = mu @ w.value
 print("Optimized weights: ", w.value)
 print("MAD with optimized weights: ", optimized_MAD)
 print("Expected portfolio returns: ",  expected_portfolio_returns)
+print(os.getcwd())
 
 # Plot optimal weights and MAD vs Expected Return
 plt.figure(figsize=(6, 4))
